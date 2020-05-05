@@ -77,6 +77,10 @@ function Item(configObj){
     self.div.style('top', self.y);
     self.div.style('background-color', 'gray');
 
+    if (self.fill){
+        self.div.style('background-color', self.fill);
+    }
+
 
     //make div draggable
     self.div.call(d3.drag().on("drag", dragging).on('end', endDrag));
@@ -143,6 +147,10 @@ function Item(configObj){
             // if a draggable item landed on a slot, try to equip it to that slot
             self.equipTo(landedOnSlot);
         }
+
+        if (landedOnSlot == null){
+            self.unEquip();
+        }
     }
     
 
@@ -158,8 +166,19 @@ function Item(configObj){
         if (debug){
             console.log('equipping')
         }
+
         targetSlot.item = self;
         self.equippedTo = targetSlot;
+        
+        // todo position div to snap to slot
+        
+    }
+
+    self.unEquip = function(){
+        if(self.equippedTo){
+            self.equippedTo.item = null;
+        }
+        self.equippedTo = null;
     }
 
     self.drawSlots = function(){
@@ -185,11 +204,12 @@ var items = [];
 var cam1Config = {'name' : 'camera 1',
                  'type' : 'camera',
                 'parentDivSelector' : '#workSpace',
-                'label' : 'Camera 1'
+                'label' : 'Camera 1',
+                'fill' : 'red'
 
             };
 
-var cam1 = items.push(new Item(cam1Config));
+
 
 var camSlot = new Slot({'name' : 'directInput',
                     'type':'camera',
@@ -207,14 +227,14 @@ var ky328Config = {'name' : 'Kymera 328i',
                      'label' : 'Kymera 328',
                      'height' : 100,
                      'width' : 100,
-                     'x' : 0,
-                     'y' : 0,
+                     'x' : 150,
+                     'y' : 150,
                     };
 
 var ky328 = new Item(ky328Config);
 items.push(ky328)
 
-
+var cam1 = items.push(new Item(cam1Config));
 
 
 
